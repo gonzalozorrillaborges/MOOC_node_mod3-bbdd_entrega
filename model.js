@@ -7,6 +7,9 @@ const sequelize = new Sequelize("sqlite:db.sqlite", options);
 class User extends Model {}
 class Quiz extends Model {}
 
+//se crea el modelo score para almacenar la puntuacion
+class Score extends Model {}
+
 User.init(
   { name: {
       type: DataTypes.STRING,
@@ -39,6 +42,20 @@ Quiz.init(
   { sequelize }
 );
 
+Score.init(
+  { wins: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate : {
+      isInt: true,
+      min: { args:   [0], msg: "Score: less than 0"},
+    }
+  }
+
+  },
+  { sequelize }
+);
+
 
 Quiz.belongsTo(User, {
   as: 'author', 
@@ -62,6 +79,18 @@ Quiz.belongsToMany(User, {
   foreignKey: 'quizId',
   otherKey: 'userId',
   through: 'Favourites'
+});
+
+
+// Las puntuaciones se guardan en un modelo 1 a N...
+Score.belongsTo(User, {
+  as: 'player', 
+  foreignKey: 'userId', 
+  onDelete: 'CASCADE'
+});
+User.hasMany(Score, {
+  as: 'scores', 
+  foreignKey: 'userId'
 });
 
 module.exports = sequelize;

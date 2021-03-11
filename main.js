@@ -2,6 +2,7 @@
 const user = require("./cmds_user.js");
 const quiz = require("./cmds_quiz.js");
 const favs = require("./cmds_favs.js");
+const score = require("./cmds_score.js");
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -16,6 +17,7 @@ rl.questionP = function (string) {   // Add questionP to rl interface
   })
 };
 
+rl.log(`Let's Play`);
 rl.prompt();
 
 rl.on('line', async (line) => {
@@ -36,6 +38,9 @@ rl.on('line', async (line) => {
     else if (['tq', 'qt', 't'].includes(cmd)) { await quiz.test(rl);}
     else if (['uq', 'qu'].includes(cmd))      { await quiz.update(rl);}
     else if (['dq', 'qd'].includes(cmd))      { await quiz.delete(rl);}
+    else if (['p'].includes(cmd))             { await quiz.play(rl);}
+
+    else if (['ls'].includes(cmd))            { await score.list(rl);}
 
     else if (['lf', 'fl', 'f'].includes(cmd)) { await favs.list(rl);}
     else if (['cf', 'fc'].includes(cmd))      { await favs.create(rl);}
